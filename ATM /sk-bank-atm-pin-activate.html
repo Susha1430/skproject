@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>S.K Bank - ATM PIN Activation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial;
+      background: #e0f7fa;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; color: #0288d1; }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background: #0288d1;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .hidden { display: none; }
+    .success { color: green; font-weight: bold; text-align: center; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🔐 ATM PIN Activation</h2>
+
+  <div id="step1">
+    <input type="text" id="accountNumber" placeholder="Account Number" />
+    <input type="text" id="atmCardNumber" placeholder="ATM Card Number" />
+    <input type="text" id="mobileNumber" placeholder="Mobile Number" />
+    <button onclick="sendOTP()">Send OTP</button>
+  </div>
+
+  <div id="step2" class="hidden">
+    <input type="text" id="otpInput" placeholder="Enter OTP" />
+    <button onclick="verifyOTP()">Verify OTP</button>
+  </div>
+
+  <div id="step3" class="hidden">
+    <input type="password" id="pinInput" placeholder="Set 4-digit ATM PIN" maxlength="4" />
+    <button onclick="activatePIN()">Activate PIN</button>
+  </div>
+
+  <div id="successMessage" class="success hidden">✅ ATM PIN Activated Successfully!</div>
+</div>
+
+<script>
+  let generatedOTP = "";
+  let atmKey = "";
+
+  function sendOTP() {
+    const acc = document.getElementById("accountNumber").value.trim();
+    const atm = document.getElementById("atmCardNumber").value.trim();
+    const mobile = document.getElementById("mobileNumber").value.trim();
+
+    if (acc === "" || atm === "" || mobile === "") {
+      alert("Please fill all fields");
+      return;
+    }
+
+    atmKey = "atm_" + atm;
+
+    // Generate 4-digit OTP
+    generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
+    alert("🔐 OTP sent to mobile: " + generatedOTP);
+
+    document.getElementById("step1").classList.add("hidden");
+    document.getElementById("step2").classList.remove("hidden");
+  }
+
+  function verifyOTP() {
+    const entered = document.getElementById("otpInput").value.trim();
+
+    if (entered === generatedOTP) {
+      document.getElementById("step2").classList.add("hidden");
+      document.getElementById("step3").classList.remove("hidden");
+    } else {
+      alert("❌ Invalid OTP");
+    }
+  }
+
+  function activatePIN() {
+    const pin = document.getElementById("pinInput").value.trim();
+
+    if (!/^\d{4}$/.test(pin)) {
+      alert("PIN must be 4 digits");
+      return;
+    }
+
+    const atmData = {
+      accountNumber: document.getElementById("accountNumber").value.trim(),
+      atmCardNumber: document.getElementById("atmCardNumber").value.trim(),
+      mobile: document.getElementById("mobileNumber").value.trim(),
+      pin: pin
+    };
+
+    localStorage.setItem(atmKey, JSON.stringify(atmData));
+
+    document.getElementById("step3").classList.add("hidden");
+    document.getElementById("successMessage").classList.remove("hidden");
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S.K Bank ATM Activation</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background: #e0f7fa; padding: 20px; }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease;
+    }
+    h2 {
+      text-align: center;
+      color: #0288d1;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background: #0288d1;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background: #0277bd;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>S.K Bank ATM Activation</h2>
+
+  <input type="text" id="accountNumber" placeholder="Enter Account Number">
+  <input type="text" id="atmCardNumber" placeholder="Enter ATM Card Number">
+
+  <button onclick="generateOTP()">Generate OTP</button>
+  <input type="text" id="otp" placeholder="Enter OTP">
+
+  <input type="password" id="newPin" placeholder="Create 4-digit PIN" maxlength="4">
+
+  <button onclick="activateATM()">Activate ATM</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+  // Create dummy user if not exists
+  if (!localStorage.getItem("userData")) {
+    const data = {
+      name: "Sushanta Kalaka",
+      dob: "2000-01-01",
+      mobile: "9876543210",
+      email: "user@skbank.com",
+      pan: "ABCDE1234F",
+      aadhar: "123412341234",
+      accountType: "Savings",
+      address: "Odisha, India",
+      branch: "Bhubaneswar",
+      pin: null, // PIN will be set here
+      atmActivated: false,
+      accountNumber: "SK98765432",
+      customerId: "CUST009876",
+      atmCardNumber: "ATM432198765432",
+      balance: 10000
+    };
+    localStorage.setItem("userData", JSON.stringify(data));
+  }
+
+  function generateOTP() {
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    alert("📱 OTP Sent: " + otp);
+    localStorage.setItem("atmOTP", otp);
+  }
+
+  function activateATM() {
+    const acc = document.getElementById("accountNumber").value.trim();
+    const atm = document.getElementById("atmCardNumber").value.trim();
+    const otp = document.getElementById("otp").value.trim();
+    const pin = document.getElementById("newPin").value.trim();
+    const result = document.getElementById("result");
+
+    if (!acc || !atm || !otp || !pin || pin.length !== 4) {
+      result.style.color = "red";
+      result.innerText = "❌ Please fill all fields correctly.";
+      return;
+    }
+
+    const data = JSON.parse(localStorage.getItem("userData"));
+
+    if (data.accountNumber === acc && data.atmCardNumber === atm) {
+      const correctOTP = localStorage.getItem("atmOTP");
+      if (otp === correctOTP) {
+        data.pin = pin;
+        data.atmActivated = true;
+        localStorage.setItem("userData", JSON.stringify(data));
+
+        result.style.color = "green";
+        result.innerText = "✅ ATM Activated Successfully! Your 4-digit PIN is set.";
+      } else {
+        result.style.color = "red";
+        result.innerText = "❌ Incorrect OTP.";
+      }
+    } else {
+      result.style.color = "red";
+      result.innerText = "❌ Invalid Account or ATM Card Number.";
+    }
+  }
+</script>
+
+</body>
+</html>

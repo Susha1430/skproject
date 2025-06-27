@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank - User Server Access</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0faff;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #0288d1;
+      margin-bottom: 25px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+    th {
+      background-color: #b2ebf2;
+    }
+    button {
+      padding: 6px 10px;
+      background-color: #0288d1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .status {
+      color: green;
+      font-weight: bold;
+    }
+    .no-data {
+      text-align: center;
+      color: #777;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🌐 S.K Bank – Server Access Panel for Registered Users</h2>
+
+  <table id="userTable">
+    <thead>
+      <tr>
+        <th>Account No</th>
+        <th>Customer ID</th>
+        <th>Name</th>
+        <th>Mobile</th>
+        <th>Account Type</th>
+        <th>Branch</th>
+        <th>Balance (₹)</th>
+        <th>Access</th>
+      </tr>
+    </thead>
+    <tbody id="userList">
+      <!-- Fills by JS -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function loadBankUsers() {
+    const tableBody = document.getElementById("userList");
+    tableBody.innerHTML = "";
+    let found = false;
+
+    for (let key in localStorage) {
+      if (key.startsWith("bankUser_")) {
+        try {
+          const user = JSON.parse(localStorage.getItem(key));
+          if (user) {
+            found = true;
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${user.accountNumber}</td>
+              <td>${user.customerId}</td>
+              <td>${user.name}</td>
+              <td>${user.mobile}</td>
+              <td>${user.accountType}</td>
+              <td>${user.branch}</td>
+              <td>₹${user.balance}</td>
+              <td><button onclick="grantAccess(this)">Grant</button></td>
+            `;
+            tableBody.appendChild(row);
+          }
+        } catch (err) {
+          console.error("Invalid user data", err);
+        }
+      }
+    }
+
+    if (!found) {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td colspan="8" class="no-data">No registered users found.</td>`;
+      tableBody.appendChild(row);
+    }
+  }
+
+  function grantAccess(button) {
+    button.outerHTML = `<span class="status">✔ Access Granted</span>`;
+  }
+
+  window.onload = loadBankUsers;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S.K Bank Deposit</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background: #e0f7fa; padding: 20px; }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease;
+    }
+    h2 {
+      text-align: center;
+      color: #0288d1;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background: #0288d1;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background: #0277bd;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+      text-align: center;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>S.K Bank Balance Deposit</h2>
+
+  <select id="depositType">
+    <option value="account">Deposit via Account Number</option>
+    <option value="atm">Deposit via ATM Card Number</option>
+  </select>
+
+  <input type="text" id="identifier" placeholder="Enter Account or ATM Card Number">
+  <input type="number" id="amount" placeholder="Enter Amount to Deposit">
+
+  <button onclick="depositMoney()">Deposit</button>
+
+  <div class="result" id="depositResult"></div>
+</div>
+
+<script>
+  // Dummy data if not present
+  if (!localStorage.getItem("userData")) {
+    const data = {
+      name: "Sushanta Kalaka",
+      dob: "2000-01-01",
+      mobile: "9876543210",
+      email: "user@skbank.com",
+      pan: "ABCDE1234F",
+      aadhar: "123412341234",
+      accountType: "Savings",
+      address: "Odisha, India",
+      branch: "Bhubaneswar",
+      pin: "1234",
+      accountNumber: "SK98765432",
+      customerId: "CUST009876",
+      atmCardNumber: "ATM432198765432",
+      balance: 10000
+    };
+    localStorage.setItem("userData", JSON.stringify(data));
+  }
+
+  function depositMoney() {
+    const type = document.getElementById("depositType").value;
+    const id = document.getElementById("identifier").value.trim();
+    const amount = parseFloat(document.getElementById("amount").value);
+    const result = document.getElementById("depositResult");
+
+    if (!id || !amount || amount <= 0) {
+      result.style.color = 'red';
+      result.innerText = "❌ Please enter valid number and amount.";
+      return;
+    }
+
+    let data = JSON.parse(localStorage.getItem("userData"));
+
+    if ((type === "account" && data.accountNumber === id) || 
+        (type === "atm" && data.atmCardNumber === id)) {
+
+      data.balance += amount;
+      localStorage.setItem("userData", JSON.stringify(data));
+
+      result.style.color = 'green';
+      result.innerText = `✅ ₹${amount} deposited successfully! New Balance: ₹${data.balance}`;
+    } else {
+      result.style.color = 'red';
+      result.innerText = "❌ Invalid account or ATM card number.";
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S.K Bank Account Opening</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background: #e0f7fa; padding: 20px; }
+    .form-container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      animation: slideFade 0.8s ease;
+    }
+    h2 {
+      text-align: center;
+      color: #0288d1;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background: #0288d1;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background: #0277bd;
+    }
+    @keyframes slideFade {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>S.K Bank Account Opening</h2>
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="date" id="dob" required>
+    
+    <input type="tel" id="mobile" placeholder="Mobile Number" required>
+    <button onclick="generateOTP('mobile')">Generate Mobile OTP</button>
+    <input type="text" id="mobileOtp" placeholder="Enter Mobile OTP" required>
+
+    <input type="email" id="email" placeholder="Email ID" required>
+    <input type="text" id="pan" placeholder="PAN Card Number" required>
+    <input type="text" id="aadhar" placeholder="Aadhar Card Number" required>
+    <button onclick="generateOTP('aadhar')">Generate Aadhar OTP</button>
+    <input type="text" id="aadharOtp" placeholder="Enter Aadhar OTP" required>
+
+    <select id="accountType" required>
+      <option value="">Select Account Type</option>
+      <option value="Savings">Savings</option>
+      <option value="Current">Current</option>
+    </select>
+
+    <label>Upload Signature:</label>
+    <input type="file" id="signature" accept="image/*" required>
+
+    <label>Upload Photo:</label>
+    <input type="file" id="photo" accept="image/*" required>
+
+    <textarea id="address" placeholder="Full Address" required></textarea>
+    <input type="text" id="branch" placeholder="Branch Name" required>
+    <input type="password" id="pin" placeholder="4 Digit PIN" maxlength="4" required>
+
+    <button onclick="submitForm()">Submit & Save</button>
+  </div>
+
+  <script>
+    function generateOTP(type) {
+      const otp = Math.floor(100000 + Math.random() * 900000);
+      alert(`${type === 'mobile' ? 'Mobile' : 'Aadhar'} OTP: ${otp}`);
+      if (type === 'mobile') localStorage.setItem('mobileOtp', otp);
+      else localStorage.setItem('aadharOtp', otp);
+    }
+
+    function submitForm() {
+      const mobileOTP = document.getElementById('mobileOtp').value;
+      const aadharOTP = document.getElementById('aadharOtp').value;
+
+      if (mobileOTP !== localStorage.getItem('mobileOtp')) {
+        alert("❌ Invalid Mobile OTP");
+        return;
+      }
+
+      if (aadharOTP !== localStorage.getItem('aadharOtp')) {
+        alert("❌ Invalid Aadhar OTP");
+        return;
+      }
+
+      const data = {
+        name: document.getElementById('name').value,
+        dob: document.getElementById('dob').value,
+        mobile: document.getElementById('mobile').value,
+        email: document.getElementById('email').value,
+        pan: document.getElementById('pan').value,
+        aadhar: document.getElementById('aadhar').value,
+        accountType: document.getElementById('accountType').value,
+        address: document.getElementById('address').value,
+        branch: document.getElementById('branch').value,
+        pin: document.getElementById('pin').value,
+        accountNumber: "SK" + Math.floor(10000000 + Math.random() * 90000000),
+        customerId: "CUST" + Math.floor(100000 + Math.random() * 900000),
+        atmCardNumber: "ATM" + Math.floor(100000000000 + Math.random() * 900000000000),
+        balance: 0
+      };
+
+      localStorage.setItem('userData', JSON.stringify(data));
+
+      alert(
+        "✅ Account Created Successfully!\n\n" +
+        "Account Number: " + data.accountNumber + "\n" +
+        "Customer ID: " + data.customerId + "\n" +
+        "ATM Card Number: " + data.atmCardNumber
+      );
+    }
+  </script>
+
+</body>
+</html>

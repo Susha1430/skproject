@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank - Employee ID Registration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e0f7fa;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #0288d1;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0288d1;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .output {
+      margin-top: 25px;
+      background: #f1faff;
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid #b2ebf2;
+    }
+    .output span {
+      display: block;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Employee ID Registration</h2>
+
+  <label for="account">Bank Account Number</label>
+  <input type="text" id="account" placeholder="Enter account number" />
+
+  <label for="customer">Customer ID</label>
+  <input type="text" id="customer" placeholder="Enter customer ID" />
+
+  <label for="name">Full Name</label>
+  <input type="text" id="name" placeholder="Enter full name" />
+
+  <label for="department">Department</label>
+  <select id="department">
+    <option value="">-- Select Department --</option>
+    <option value="Accounts">Accounts</option>
+    <option value="IT">IT</option>
+    <option value="Loans">Loans</option>
+    <option value="Support">Support</option>
+    <option value="Help">Help</option>
+  </select>
+
+  <button onclick="registerEmployee()">Register Employee</button>
+
+  <div class="output" id="output" style="display:none;">
+    <h3>✅ Employee Registered</h3>
+    <span><strong>Employee ID:</strong> <span id="empId"></span></span>
+    <span><strong>Bank Account Number:</strong> <span id="accNum"></span></span>
+    <span><strong>Customer ID:</strong> <span id="custId"></span></span>
+    <span><strong>Full Name:</strong> <span id="empName"></span></span>
+    <span><strong>Department:</strong> <span id="empDept"></span></span>
+  </div>
+</div>
+
+<script>
+  let empCounter = parseInt(localStorage.getItem("empCounter") || "1000");
+
+  function registerEmployee() {
+    const account = document.getElementById("account").value.trim();
+    const customer = document.getElementById("customer").value.trim();
+    const name = document.getElementById("name").value.trim();
+    const dept = document.getElementById("department").value;
+
+    if (!account || !customer || !name || !dept) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    empCounter++;
+    const empId = "EMP" + empCounter;
+
+    const employee = {
+      employeeId: empId,
+      accountNumber: account,
+      customerId: customer,
+      name,
+      department: dept
+    };
+
+    localStorage.setItem("emp_" + empId, JSON.stringify(employee));
+    localStorage.setItem("empCounter", empCounter);
+
+    // Show confirmation
+    document.getElementById("empId").textContent = empId;
+    document.getElementById("accNum").textContent = account;
+    document.getElementById("custId").textContent = customer;
+    document.getElementById("empName").textContent = name;
+    document.getElementById("empDept").textContent = dept;
+    document.getElementById("output").style.display = "block";
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S.K Bank Withdrawal</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background: #e0f7fa; padding: 20px; }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease;
+    }
+    h2 {
+      text-align: center;
+      color: #0288d1;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background: #0288d1;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background: #0277bd;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+    #atmPinField {
+      display: none;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>S.K Bank Withdrawal</h2>
+
+  <select id="withdrawType" onchange="togglePin()">
+    <option value="account">Withdraw via Account Number</option>
+    <option value="atm">Withdraw via ATM Card + PIN</option>
+  </select>
+
+  <input type="text" id="identifier" placeholder="Enter Account or ATM Card Number">
+  <input type="number" id="amount" placeholder="Enter Amount to Withdraw">
+
+  <input type="password" id="atmPinField" placeholder="Enter 4-digit PIN" maxlength="4">
+
+  <button onclick="withdrawMoney()">Withdraw</button>
+
+  <div class="result" id="withdrawResult"></div>
+</div>
+
+<script>
+  // Create dummy data if not set
+  if (!localStorage.getItem("userData")) {
+    const data = {
+      name: "Sushanta Kalaka",
+      dob: "2000-01-01",
+      mobile: "9876543210",
+      email: "user@skbank.com",
+      pan: "ABCDE1234F",
+      aadhar: "123412341234",
+      accountType: "Savings",
+      address: "Odisha, India",
+      branch: "Bhubaneswar",
+      pin: "1234", // Pre-set ATM PIN
+      atmActivated: true,
+      accountNumber: "SK98765432",
+      customerId: "CUST009876",
+      atmCardNumber: "ATM432198765432",
+      balance: 10000
+    };
+    localStorage.setItem("userData", JSON.stringify(data));
+  }
+
+  function togglePin() {
+    const type = document.getElementById("withdrawType").value;
+    const pinField = document.getElementById("atmPinField");
+    pinField.style.display = (type === "atm") ? "block" : "none";
+  }
+
+  function withdrawMoney() {
+    const type = document.getElementById("withdrawType").value;
+    const id = document.getElementById("identifier").value.trim();
+    const amount = parseFloat(document.getElementById("amount").value);
+    const pinInput = document.getElementById("atmPinField").value.trim();
+    const result = document.getElementById("withdrawResult");
+
+    if (!id || isNaN(amount) || amount <= 0) {
+      result.style.color = 'red';
+      result.innerText = "❌ Enter valid number and amount.";
+      return;
+    }
+
+    let data = JSON.parse(localStorage.getItem("userData"));
+    const validAccount = (type === "account" && data.accountNumber === id);
+    const validATM = (type === "atm" && data.atmCardNumber === id && data.pin === pinInput);
+
+    if (validAccount || validATM) {
+      if (data.balance >= amount) {
+        data.balance -= amount;
+        localStorage.setItem("userData", JSON.stringify(data));
+        result.style.color = 'green';
+        result.innerText = `✅ ₹${amount} withdrawn successfully! New Balance: ₹${data.balance}`;
+      } else {
+        result.style.color = 'red';
+        result.innerText = "❌ Insufficient balance.";
+      }
+    } else {
+      result.style.color = 'red';
+      result.innerText = "❌ Invalid credentials.";
+    }
+  }
+</script>
+
+</body>
+</html>
