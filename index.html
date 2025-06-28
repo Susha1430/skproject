@@ -2,147 +2,155 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>S.K Bank - Home</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Website Home</title>
   <style>
-    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
-
     body {
-      background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #6dd5fa, #2980b9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
       height: 100vh;
-      overflow-x: hidden;
-    }
-
-    .main {
-      padding: 60px 30px;
-      max-width: 700px;
-      margin: auto;
-      animation: fadeIn 1s ease;
-    }
-
-    h1 {
-      font-size: 36px;
-      color: #01579b;
-    }
-
-    p {
-      font-size: 18px;
-      color: #333;
-      margin-top: 20px;
-      line-height: 1.6;
-    }
-
-    .menu-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #0288d1;
-      color: white;
-      border: none;
-      padding: 14px 18px;
-      font-size: 18px;
-      border-radius: 50px;
-      cursor: pointer;
-      z-index: 1001;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      transition: background 0.3s ease;
-    }
-
-    .menu-btn:hover {
-      background: #0277bd;
-    }
-
-    .novi-panel {
-      position: fixed;
-      top: 0;
-      right: -250px;
-      width: 250px;
-      height: 100%;
-      background: #0288d1;
-      color: white;
-      padding-top: 60px;
-      box-shadow: -4px 0 12px rgba(0,0,0,0.3);
-      transition: right 0.4s ease;
-      z-index: 1000;
-    }
-
-    .novi-panel.active {
-      right: 0;
-    }
-
-    .novi-panel h2 {
-      text-align: center;
-      font-size: 22px;
-      margin-bottom: 25px;
-    }
-
-    .novi-panel a {
-      display: block;
-      padding: 14px 25px;
-      color: white;
-      text-decoration: none;
-      font-size: 16px;
-      border-top: 1px solid rgba(255,255,255,0.2);
-      transition: 0.3s ease;
-    }
-
-    .novi-panel a:hover {
-      background: #0277bd;
-      padding-left: 30px;
+      margin: 0;
+      animation: fadeIn 1s ease-in;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 768px) {
-      h1 { font-size: 28px; }
-      .menu-btn { font-size: 16px; padding: 12px 16px; }
-      .novi-panel { width: 200px; }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      animation: slideIn 1s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2980b9;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2980b9;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #1a5276;
+    }
+
+    .toggle {
+      text-align: center;
+      margin-top: 10px;
+      color: #2980b9;
+      cursor: pointer;
+    }
+
+    .info {
+      text-align: center;
+      margin-top: 20px;
+      color: #444;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h2 id="formTitle">Register</h2>
+    <div id="registerForm">
+      <input type="text" id="regName" placeholder="Full Name" />
+      <input type="email" id="regEmail" placeholder="Email ID" />
+      <input type="password" id="regPassword" placeholder="Password" />
+      <button onclick="register()">Register</button>
+    </div>
 
-<!-- Main Content -->
-<div class="main">
-  <h1>Welcome to <strong>S.K SUSHANTA</strong> 🏦</h1>
-  <p>
-    Experience secure and smart digital banking.<br>
-    Click the menu button on the right to register, activate ATM, deposit, view details, and complete KYC.
-  </p>
-</div>
+    <div id="loginForm" style="display: none;">
+      <input type="email" id="loginEmail" placeholder="Email ID" />
+      <input type="password" id="loginPassword" placeholder="Password" />
+      <button onclick="login()">Login</button>
+    </div>
 
-<!-- Floating Touch Button -->
-<button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
+    <div class="toggle" onclick="toggleForm()">Switch to Login/Register</div>
 
-<!-- Novi Sliding Panel -->
-<div class="novi-panel" id="navPanel">
-  <h2>Bank Menu</h2>
-  <a href="login.html" target="_blank">🔐 Login</a>
-  <a href="registration.html" target="_blank">📝 Registration</a>
-  <a href="sk-bank-account-details.html" target="_blank">👤 Account Details</a>
-  <a href="customer/Index.html" target="_blank"> 🪪Employees</a>
-  <a href="sk-bank-deposit.html" target="_blank">💰 Deposit</a>
-  <a href="sk-bank-kyc-form.html" target="_blank">📄 KYC Form</a>
-</div>
+    <div class="info">
+      📧 Email ID: support@example.com<br />
+      📞 Contact: +91-9876543210<br />
+      ☎️ Helpline: 1800-123-456
+    </div>
+  </div>
 
-<script>
-  function toggleMenu() {
-    const panel = document.getElementById("navPanel");
-    panel.classList.toggle("active");
-  }
-
-  // Optional: auto-close when clicking outside
-  document.addEventListener("click", function(e) {
-    const panel = document.getElementById("navPanel");
-    const btn = document.querySelector(".menu-btn");
-    if (!panel.contains(e.target) && e.target !== btn) {
-      panel.classList.remove("active");
+  <script>
+    function toggleForm() {
+      const regForm = document.getElementById('registerForm');
+      const loginForm = document.getElementById('loginForm');
+      const title = document.getElementById('formTitle');
+      if (regForm.style.display === 'none') {
+        regForm.style.display = 'block';
+        loginForm.style.display = 'none';
+        title.innerText = 'Register';
+      } else {
+        regForm.style.display = 'none';
+        loginForm.style.display = 'block';
+        title.innerText = 'Login';
+      }
     }
-  });
-</script>
 
+    function register() {
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+
+      if (!name || !email || !password) {
+        alert("Please fill in all fields");
+        return;
+      }
+
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("userPassword", password);
+      alert("Registration successful!");
+      toggleForm();
+    }
+
+    function login() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      const storedEmail = localStorage.getItem("userEmail");
+      const storedPassword = localStorage.getItem("userPassword");
+
+      if (email === storedEmail && password === storedPassword) {
+        alert("Login successful!");
+        window.location.href = "Home.html";
+      } else {
+        alert("Invalid credentials!");
+      }
+    }
+  </script>
 </body>
 </html>
