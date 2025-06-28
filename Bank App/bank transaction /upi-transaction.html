@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>S.K Bank - UPI Transaction</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #dff9fb, #c7ecee);
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h2 {
+      color: #0077b6;
+      margin-bottom: 20px;
+      animation: fadeDown 1s ease-in-out;
+    }
+
+    .form-box {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1.5s ease;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #0984e3;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fadeDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>💸 UPI Money Transfer</h2>
+
+  <div class="form-box">
+    <label>📱 Your Mobile Number</label>
+    <input type="text" id="mobile" placeholder="Enter your registered mobile">
+
+    <label>🔐 4-Digit PIN</label>
+    <input type="password" id="pin" maxlength="4" placeholder="Enter your PIN">
+
+    <label>🔁 Receiver UPI ID</label>
+    <input type="text" id="receiver" placeholder="example@skbank">
+
+    <label>💰 Amount (INR)</label>
+    <input type="number" id="amount" placeholder="Enter amount">
+
+    <button onclick="sendUPI()">Send Money</button>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    function getUser(mobile) {
+      const data = localStorage.getItem("SKUSER-" + mobile);
+      return data ? JSON.parse(data) : null;
+    }
+
+    function sendUPI() {
+      const mob = document.getElementById("mobile").value.trim();
+      const pin = document.getElementById("pin").value.trim();
+      const receiver = document.getElementById("receiver").value.trim();
+      const amount = parseFloat(document.getElementById("amount").value.trim());
+      const result = document.getElementById("result");
+
+      if (!mob || !pin || !receiver || isNaN(amount) || amount <= 0) {
+        result.style.color = "red";
+        result.textContent = "⚠️ Please fill all fields correctly.";
+        return;
+      }
+
+      const user = getUser(mob);
+      if (!user || user.pinCode !== pin) {
+        result.style.color = "red";
+        result.textContent = "❌ Invalid mobile or PIN.";
+        return;
+      }
+
+      if (!user.balance) user.balance = 10000; // default balance
+
+      if (user.balance < amount) {
+        result.style.color = "red";
+        result.textContent = "❌ Insufficient balance.";
+        return;
+      }
+
+      user.balance -= amount;
+      localStorage.setItem("SKUSER-" + mob, JSON.stringify(user));
+
+      result.style.color = "green";
+      result.textContent = `✅ ₹${amount.toFixed(2)} sent to ${receiver}`;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank – Deposit Money</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e1f5fe;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #0288d1;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      animation: fadeDown 1s ease;
+    }
+
+    .container {
+      max-width: 400px;
+      background: white;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      background-color: #03a9f4;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #00695c;
+      font-weight: bold;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>💰 Deposit Money</header>
+
+  <div class="container">
+    <input type="text" id="mobile" placeholder="📱 Enter Mobile Number" />
+    <input type="number" id="amount" placeholder="💵 Enter Amount to Deposit" />
+    <button onclick="depositMoney()">Deposit</button>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    function depositMoney() {
+      const mobile = document.getElementById("mobile").value.trim();
+      const amount = parseFloat(document.getElementById("amount").value.trim());
+
+      if (!mobile || isNaN(amount) || amount <= 0) {
+        alert("⚠️ Enter valid mobile and deposit amount.");
+        return;
+      }
+
+      const userKey = "SKUSER-" + mobile;
+      const user = JSON.parse(localStorage.getItem(userKey));
+
+      if (!user) {
+        alert("❌ User not found. Please register first.");
+        return;
+      }
+
+      user.balance = (parseFloat(user.balance) || 0) + amount;
+      localStorage.setItem(userKey, JSON.stringify(user));
+
+      document.getElementById("result").innerText = `✅ ₹${amount} deposited. New Balance: ₹${user.balance}`;
+    }
+  </script>
+
+</body>
+</html>

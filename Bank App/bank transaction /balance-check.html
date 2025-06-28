@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank - Balance Check</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e3f2fd;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 50px 20px;
+    }
+
+    h2 {
+      color: #0d47a1;
+      animation: fadeInDown 1s ease-in-out;
+    }
+
+    .form-box {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+      margin-top: 20px;
+      animation: fadeInUp 1.2s ease-in-out;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background-color: #1976d2;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🏦 Check Bank Balance</h2>
+
+  <div class="form-box">
+    <label>📱 Mobile Number</label>
+    <input type="text" id="mobile" placeholder="Enter your mobile number">
+
+    <label>🔐 4-digit PIN</label>
+    <input type="password" id="pin" maxlength="4" placeholder="Enter your PIN">
+
+    <button onclick="checkBalance()">Check Balance</button>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    function getUser(mobile) {
+      const data = localStorage.getItem("SKUSER-" + mobile);
+      return data ? JSON.parse(data) : null;
+    }
+
+    function checkBalance() {
+      const mobile = document.getElementById("mobile").value.trim();
+      const pin = document.getElementById("pin").value.trim();
+      const result = document.getElementById("result");
+
+      const user = getUser(mobile);
+
+      if (!user) {
+        result.textContent = "❌ User not found.";
+        result.style.color = "red";
+        return;
+      }
+
+      if (user.pinCode !== pin) {
+        result.textContent = "❌ Incorrect PIN.";
+        result.style.color = "red";
+        return;
+      }
+
+      if (!user.balance) user.balance = 10000; // Set default balance
+
+      result.style.color = "green";
+      result.innerHTML = `
+        🧾 Account No: <strong>${user.accountNumber}</strong><br>
+        💰 Available Balance: ₹<strong>${user.balance.toFixed(2)}</strong>
+      `;
+    }
+  </script>
+
+</body>
+</html>
