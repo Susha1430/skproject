@@ -90,7 +90,7 @@
       const user = JSON.parse(data);
       if (user.pinCode === pin) {
         localStorage.setItem("SK_ACTIVE_USER", JSON.stringify(user));
-        window.location.href = "/app-home.html"; // Redirect to main page
+        window.location.href = "/home.html"; // Redirect to main page
       } else {
         err.textContent = "❌ Incorrect PIN.";
       }
