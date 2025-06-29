@@ -129,30 +129,32 @@
     const isMinor = age < 18 ? "Minor" : "Major";
 
     box.innerHTML = `
-      <div class="passbook">
-        <div class="left">
-          <div class="field"><strong>CIF No:</strong> ${data.cifNo || "N/A"}</div>
-          <div class="field"><strong>Account No:</strong> ${data.accountNumber || accNo}</div>
-          <div class="field"><strong>Customer ID:</strong> ${data.customerId || "N/A"}</div>
-          <div class="field"><strong>Phone:</strong> ${data.mobile || "N/A"}</div>
-          <div class="field"><strong>Email:</strong> ${data.email || "N/A"}</div>
-          <div class="field"><strong>D.O.B:</strong> ${data.dob || "N/A"} (${isMinor})</div>
-          <div class="field"><strong>Mode of Operation:</strong> ${data.mop || "Single"}</div>
-          <div class="field"><strong>Nomination Reg No:</strong> ${data.nomRegNo || "N/A"}</div>
-          <div class="field"><strong>PIN Code:</strong> ${data.pinCode || "N/A"}</div>
-        </div>
+  <div class="passbook">
+    <div class="left">
+      <div class="field"><strong>CIF No:</strong> ${data.cifNo || "N/A"}</div>
+      <div class="field"><strong>Bank Holder Name:</strong> ${data.fullName || "N/A"}</div>
+      <div class="field"><strong>Account No:</strong> ${data.accountNumber || accNo}</div>
+      <div class="field"><strong>Customer ID:</strong> ${data.customerId || "N/A"}</div>
+      <div class="field"><strong>Phone:</strong> ${data.mobile || "N/A"}</div>
+      <div class="field"><strong>Email:</strong> ${data.email || "N/A"}</div>
+      <div class="field"><strong>D.O.B:</strong> ${data.dob || "N/A"} (${isMinor})</div>
+      <div class="field"><strong>Mode of Operation:</strong> ${data.mop || "Single"}</div>
+      <div class="field"><strong>Nomination Reg No:</strong> ${data.nomRegNo || "N/A"}</div>
+      <div class="field"><strong>PIN Code:</strong> ${data.pinCode || "N/A"}</div>
+    </div>
 
-        <div class="right">
-          <div class="field"><strong>Bank Phone:</strong> 1800-123-4567</div>
-          <div class="field"><strong>Bank Email:</strong> help@skbank.in</div>
-          <div class="field"><strong>Branch Code:</strong> ${data.branchCode || "SKBR0001"}</div>
-          <div class="field"><strong>Date of Issue:</strong> ${data.dateOfIssue || "2025-06-28"}</div>
-          <div class="field"><strong>IFSC:</strong> ${data.ifsc || "SKBK0001234"}</div>
-          <div class="field"><strong>MICR:</strong> ${data.micr || "765432001"}</div>
-          <div class="signature">Branch Manager<br>S.K SUSHANTA</div>
-        </div>
-      </div>
-    `;
+    <div class="right">
+      <div class="field"><strong>Bank Phone:</strong> 1800-123-4567</div>
+      <div class="field"><strong>Bank Email:</strong> help@skbank.in</div>
+      <div class="field"><strong>Branch Code:</strong> ${data.branchCode || "SKBR0001"}</div>
+      <div class="field"><strong>Date of Issue:</strong> ${data.dateOfIssue || "2025-06-28"}</div>
+      <div class="field"><strong>IFSC:</strong> ${data.ifsc || "SKBK0001234"}</div>
+      <div class="field"><strong>MICR:</strong> ${data.micr || "765432001"}</div>
+      <div class="signature">Branch Manager<br>S.K SUSHANTA</div>
+    </div>
+  </div>
+`;
+
   }
 </script>
 
