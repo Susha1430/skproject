@@ -115,13 +115,13 @@
         return;
       }
 
-      if (!user.balance) user.balance = 10000; // Set default balance
-
-      result.style.color = "green";
-      result.innerHTML = `
-        🧾 Account No: <strong>${user.accountNumber}</strong><br>
-        💰 Available Balance: ₹<strong>${user.balance.toFixed(2)}</strong>
-      `;
+      if (accountData) {
+  resultDiv.style.color = "green";
+  resultDiv.innerHTML = `✅ Account: <strong>${accNo}</strong><br>💰 Balance: ₹${accountData.balance}`;
+} else {
+  resultDiv.style.color = "red";
+  resultDiv.textContent = "❌ Account not found!";
+}
     }
   </script>
 
