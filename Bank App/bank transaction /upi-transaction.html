@@ -2,57 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>S.K Bank - UPI Transaction</title>
+  <title>S.K Bank - Transfer Money</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #dff9fb, #c7ecee);
+      background: linear-gradient(to right, #e0f2f1, #b2dfdb);
+      text-align: center;
       padding: 40px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     h2 {
-      color: #0077b6;
+      color: #00695c;
       margin-bottom: 20px;
       animation: fadeDown 1s ease-in-out;
     }
 
-    .form-box {
+    .box {
       background: white;
-      padding: 25px;
-      border-radius: 15px;
-      width: 100%;
       max-width: 420px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 1.5s ease;
-    }
-
-    label {
-      display: block;
-      margin-top: 10px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease-in;
     }
 
     input {
       width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      margin-top: 5px;
-      border-radius: 6px;
+      padding: 12px;
+      margin: 10px 0;
       border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
     }
 
     button {
-      margin-top: 20px;
       width: 100%;
       padding: 12px;
-      background: #0984e3;
-      color: white;
       font-size: 16px;
+      background-color: #00796b;
+      color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
     }
 
@@ -62,7 +54,7 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
+      from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
 
@@ -74,65 +66,62 @@
 </head>
 <body>
 
-  <h2>💸 UPI Money Transfer</h2>
+  <h2>💸 S.K Bank Balance Transfer</h2>
 
-  <div class="form-box">
-    <label>📱 Your Mobile Number</label>
-    <input type="text" id="mobile" placeholder="Enter your registered mobile">
-
-    <label>🔐 4-Digit PIN</label>
-    <input type="password" id="pin" maxlength="4" placeholder="Enter your PIN">
-
-    <label>🔁 Receiver UPI ID</label>
-    <input type="text" id="receiver" placeholder="example@skbank">
-
-    <label>💰 Amount (INR)</label>
-    <input type="number" id="amount" placeholder="Enter amount">
-
-    <button onclick="sendUPI()">Send Money</button>
-
-    <div id="result" class="result"></div>
+  <div class="box">
+    <input type="text" id="fromAcc" placeholder="Sender Account Number">
+    <input type="text" id="toMobile" placeholder="Receiver Mobile Number">
+    <input type="number" id="amount" placeholder="Enter Amount">
+    <button onclick="transferBalance()">Transfer Money</button>
+    <div class="result" id="result"></div>
   </div>
 
   <script>
-    function getUser(mobile) {
-      const data = localStorage.getItem("SKUSER-" + mobile);
-      return data ? JSON.parse(data) : null;
-    }
-
-    function sendUPI() {
-      const mob = document.getElementById("mobile").value.trim();
-      const pin = document.getElementById("pin").value.trim();
-      const receiver = document.getElementById("receiver").value.trim();
+    function transferBalance() {
+      const fromAcc = document.getElementById("fromAcc").value.trim();
+      const toMobile = document.getElementById("toMobile").value.trim();
       const amount = parseFloat(document.getElementById("amount").value.trim());
       const result = document.getElementById("result");
 
-      if (!mob || !pin || !receiver || isNaN(amount) || amount <= 0) {
+      result.innerHTML = "";
+
+      if (!fromAcc || !toMobile || isNaN(amount) || amount <= 0) {
         result.style.color = "red";
-        result.textContent = "⚠️ Please fill all fields correctly.";
+        result.textContent = "❌ Please enter valid details.";
         return;
       }
 
-      const user = getUser(mob);
-      if (!user || user.pinCode !== pin) {
+      const sender = JSON.parse(localStorage.getItem(fromAcc));
+      if (!sender || sender.balance === undefined || sender.balance < amount) {
         result.style.color = "red";
-        result.textContent = "❌ Invalid mobile or PIN.";
+        result.textContent = "❌ Sender account not found or insufficient funds.";
         return;
       }
 
-      if (!user.balance) user.balance = 10000; // default balance
-
-      if (user.balance < amount) {
+      const link = JSON.parse(localStorage.getItem("BANK-LINK-" + toMobile));
+      if (!link || !link.active) {
         result.style.color = "red";
-        result.textContent = "❌ Insufficient balance.";
+        result.textContent = "❌ Receiver mobile number is not linked to an active account.";
         return;
       }
 
-      user.balance -= amount;
-      localStorage.setItem("SKUSER-" + mob, JSON.stringify(user));
+      const receiverAcc = link.accountNumber;
+      const receiver = JSON.parse(localStorage.getItem(receiverAcc)) || {
+        accountNumber: receiverAcc,
+        mobile: toMobile,
+        balance: 0
+      };
+
+      // Perform transaction
+      sender.balance -= amount;
+      receiver.balance = (receiver.balance || 0) + amount;
+
+      // Save both
+      localStorage.setItem(fromAcc, JSON.stringify(sender));
+      localStorage.setItem(receiverAcc, JSON.stringify(receiver));
 
       result.style.color = "green";
-      result.textContent = `✅ ₹${amount.toFixed(2)} sent to ${receiver}`;
+      result.innerHTML = `✅ ₹${amount.toFixed(2)} transferred to mobile ${toMobile}<br>New Balance: ₹${sender.balance.toFixed(2)}`;
     }
   </script>
 
